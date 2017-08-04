@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+        $(document).ready(function() {
+           
+            var socket  = io.connect('http://localhost:8000');
+
+            if (typeof count === 'undefined') {
+                var count = 0;
+            };
+
+            $('#button').click(function() {
+                socket.emit('button_pressed', {});
+            });
+        
+            socket.on('server_response', function(data) {
+                let count = data.count;
+                $('h1').html('The button has been pushed ' + count + ' time(s).');
+            });
+
+            $('#reset').click(function() {
+                socket.emit('reset_pressed', {});
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <h1>The button has been pushed 0 time(s).</h1>
+    <button id='button'>Push the fucking button.</button>
+    <br>
+    <button id='reset'>Reset the fucking count.</button>
+</body>
+</html>
