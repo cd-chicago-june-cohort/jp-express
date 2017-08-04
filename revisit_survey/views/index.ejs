@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+        $(document).ready(function() {
+           
+            var socket  = io.connect('http://localhost:8000');
+
+            $('#response').hide();
+
+            $('#submit').click(function() {
+                event.preventDefault();
+                console.log("WORKNG")
+                socket.emit('form_submitted', {
+                    name: $('#name').val(),
+                    location: $('#location').val(),
+                    language: $('#language').val(),
+                    comment: $('#comment').val(),
+                });
+            });
+        
+            socket.on('server_response', function(data) {
+                console.log('THE INFO: ', data.info, " THE NUMBER: ", data.number);
+                $('#response').show();
+                $('#info').append(document.createTextNode('You emitted the following information to the server: ' + JSON.stringify(data.info)));
+                $('#num').append(document.createTextNode('Your lucky number emitted by the server is: ' + data.number));
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id="response">
+        <p id="info"></p>
+        <p id="num"></p>
+        <a href="/"><button type="">Reset</button></a>
+    </div>
+    <form action="/submit" method="post">
+        <label for="your_name">Your Name</label>
+        <input type="text" id="name" name="name">
+        <br>
+        <label for="location">Dojo Location:</label>
+        <select name="location" id="location">
+            <option value="Mountain View">Mountain View</option>
+            <option value="Silicon Valley">Silicon Valley</option>
+            <option value="Los Angeles">Los Angeles</option>
+            <option value="Dallas">Dallas</option>
+            <option value="Washington DC">Washington DC</option>
+            <option value="Tulsa">Tulsa</option>
+            <option value="Chicago">Chicago</option>
+        </select>
+        <br>
+        <label for="location">Dojo Location:</label>
+        <select name="language" id="language">
+            <option value="C">C</option>
+            <option value="C++">C++</option>
+            <option value="C#">C#</option>
+            <option value="Java">Java</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Ruby">Ruby</option>
+        </select>
+        <br>
+        <label for="comment">Comment (optional):</label>
+        <br>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <br>
+        <input type="submit" value="Submit" id="submit">
+    </form>
+</body>
+</html>
