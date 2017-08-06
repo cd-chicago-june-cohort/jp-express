@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+        $(document).ready(function() {
+
+            var username = prompt('Please enter your name');
+            
+            var socket  = io.connect('http://localhost:8000');
+
+            $('#send').click(function() {
+                event.preventDefault();
+                if ($('#message').val()) {
+                    socket.emit('submitted', {
+                        name: username,
+                        message: $('#message').val(),
+                    });
+                    $('#message').val("");
+                };
+            });
+
+            socket.on('initial_server_response', function(data) {
+                var display_string = "";
+                for (var i = 0; i < data.users.length; i++) {
+                    display_string +=  "<p>";
+                    display_string += data.users[i] + ": ";
+                    display_string += data.messages[i] + "</p>";
+                }
+                $('#textbox').html(display_string);
+            });
+
+            socket.on('server_response', function(data) {
+                var display_string = "";
+                for (var i = 0; i < data.users.length; i++) {
+                    display_string +=  "<p>";
+                    display_string += data.users[i] + ": ";
+                    display_string += data.messages[i] + "</p>";
+                }
+                $('#textbox').html(display_string);
+                $('#message').val("");
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <div id='conversation'>
+        <h1>Conversation Board</h1>
+        <hr>
+        <div id='textbox'>
+            
+        </div>
+        <hr>
+        <form action="">
+            <textarea name="" id="message" cols="30" rows="10" placeholder="Enter your message here..."></textarea>
+            <input type="submit" value="Send" id="send">
+        </form>
+
+    </div>
+</body>
+</html>

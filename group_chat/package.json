@@ -1,5 +1,5 @@
 {
-  "name": "epic_button_game",
+  "name": "group_chat",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "ejs": "^2.5.7",
     "express": "^4.15.3",
     "express-session": "^1.15.5",
     "socket.io": "^2.0.3"
